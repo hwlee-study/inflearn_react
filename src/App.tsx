@@ -1,57 +1,51 @@
-import {useState} from 'react'
-import './App.css'
-import List from './components/List'
-import {todoData} from './components/list.model'
+import React, {useState} from 'react'
+import Form from './components/todo/Form'
+import List from './components/todo/List'
+import {ITodoList} from './components/todo/todo.model'
 
 export default function App() {
-  const [todoData, setTodoData] = useState<todoData[]>([])
+  const [todoData, setTodoData] = useState<ITodoList[]>([])
 
-  const [value, setValue] = useState('')
+  const [todoInputValue, setTodoInputValue] = useState('')
 
-  const inputOnChangeHanlder = (event: any) => {
-    setValue(event.target.value)
-  }
-
-  const onSubmitHandler = (e: any) => {
+  const onSubmitHandler = (event: React.FormEvent) => {
     // page reload 되는 것 방지
-    e.preventDefault()
+    event.preventDefault()
 
     // input에 입력한 값
     const addTodoDatas = {
       id: Date.now().toString(),
-      title: value,
+      title: todoInputValue,
       completed: false,
     }
 
     // Setter에서 이전 state를 가지고 오기 위해서 인수에 함수를 이용해서 사용
-    setTodoData((prevTodoData: todoData[]) => [...prevTodoData, addTodoDatas])
-    setValue('')
+    setTodoData((prevTodoData: ITodoList[]) => [...prevTodoData, addTodoDatas])
+    setTodoInputValue('')
   }
 
   return (
-    <div className="container">
-      <div className="todoBlock">
-        <div className="title">
-          <h1>할 일 목록</h1>
-        </div>
-        {/* <List todoData={todoData} setTodoData={setTodoData} /> */}
+    <div className="w-screen h-screen">
+      <div
+        className="
+      w-[600px]
+      h-[680px]
+      m-auto
+      p-[30px]
+      mt-[50px]
+      bg-white
+      rounded
+      border
+      border-gray-100
+      shadow-[-9px_17px_13px_rgba(0,0,0,16%)]"
+      >
+        <h1 className="text-xl font-bold p-[10px] border-b">할 일 목록</h1>
         <List todoData={todoData} setTodoData={setTodoData} />
-        <form style={{display: 'flex'}} onSubmit={onSubmitHandler}>
-          <input
-            type="text"
-            name="value"
-            style={{flex: '10', padding: '5px'}}
-            placeholder="해야 할 일을 입력하세요."
-            value={value}
-            onChange={inputOnChangeHanlder}
-          />
-          <input
-            type="submit"
-            value="입력"
-            className="todoSubmit"
-            style={{flex: '1'}}
-          />
-        </form>
+        <Form
+          todoInputValue={todoInputValue}
+          setTodoInputValue={setTodoInputValue}
+          onSubmitHandler={onSubmitHandler}
+        />
       </div>
     </div>
   )
